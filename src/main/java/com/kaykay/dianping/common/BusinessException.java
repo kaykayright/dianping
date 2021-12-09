@@ -9,6 +9,13 @@ public class BusinessException extends Exception {
         this.commonError = new CommonError(emBussinessError);
     }
 
+
+    public BusinessException(EmBussinessError emBussinessError,String errMsg){
+        super();
+        this.commonError = new CommonError(emBussinessError);
+        this.commonError.setErrMsg(errMsg);
+    }
+
     public CommonError getCommonError() {
         return commonError;
     }
