@@ -50,8 +50,6 @@
             <artifactId>spring-boot-starter-validation</artifactId>
             <version>2.3.4.RELEASE</version>
         </dependency>
-
-
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>druid</artifactId>
