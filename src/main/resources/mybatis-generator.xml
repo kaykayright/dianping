@@ -6,7 +6,8 @@
 
     <context id="DB2Tables"    targetRuntime="MyBatis3">
         <!--数据库链接地址账号密码-->
-        <jdbcConnection driverClass="com.mysql.jdbc.Driver" connectionURL="jdbc:mysql://192.168.199.151:3306/dianpingdb" userId="root" password="123456789">
+        <jdbcConnection driverClass="com.mysql.jdbc.Driver" connectionURL="jdbc:mysql://127.0.0.1:3306/dianpingdb"
+                        userId="root" password="123456789">
         </jdbcConnection>
         <!--生成DataObject类存放位置-->
         <javaModelGenerator targetPackage="com.kaykay.dianping.model" targetProject="src/main/java">
