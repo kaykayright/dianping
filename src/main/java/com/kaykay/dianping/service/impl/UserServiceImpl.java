@@ -12,7 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 import sun.misc.BASE64Encoder;
 
 import java.io.UnsupportedEncodingException;
-import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Date;

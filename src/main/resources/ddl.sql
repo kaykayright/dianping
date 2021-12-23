@@ -1,15 +1,11 @@
-CREATE TABLE `user` (
-                            `id`  int(11) NOT NULL ,
-                            `created_at`  datetime NULL DEFAULT NULL ,
-                            `updated_at`  datetime NULL DEFAULT NULL ,
-                            `telphone`  varchar(40) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL ,
-                            `password`  varchar(200) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL ,
-                            `nick_name`  varchar(40) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL ,
-                            `gender`  int(11) NULL DEFAULT NULL ,
-                            PRIMARY KEY (`id`),
-                            UNIQUE INDEX `telphone_unique_index` (`telphone`) USING BTREE
-)
-    ENGINE=InnoDB
-DEFAULT CHARACTER SET=utf8 COLLATE=utf8_general_ci
-ROW_FORMAT=DYNAMIC
-;
+CREATE TABLE `dianpingdb`. `user`  (
+                                       `id` int(11) NOT NULL AUTO_INCREMENT,
+                                       `create_at` datetime(0) NOT NULL DEFAULT now(),
+                                       `update_at` datetime(0) NOT NULL DEFAULT now(),
+                                       `telphone` varchar(40) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+                                       `password` varchar(200) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+                                       `nick_name` varchar(40) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+                                       `gender` int(1) NOT NULL DEFAULT 0,
+                                       PRIMARY KEY (`id`) USING BTREE,
+                                       UNIQUE INDEX `telphone_unique_index`(`telphone`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_unicode_ci ROW_FORMAT = Dynamic;
