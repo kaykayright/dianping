@@ -12,7 +12,11 @@ public enum EmBussinessError {
 
     //用户服务相关的类型 20000开头
     REGISTER_DUPLICATE_FAIL(20001,"用户已存在"),
-    LOGIN_FAIL(20002,"手机号或者密码错误"),;
+    LOGIN_FAIL(20002,"手机号或者密码错误"),
+
+    //管理员相应错误
+    ADMIN_SHOULD_LOGIN(30001,"管理员需要先登录"),
+   ;
 
     private Integer errCode;
     private String errMsg;

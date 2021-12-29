@@ -5,7 +5,9 @@ package com.kaykay.dianping.controller.admin;/**
  * @Modified By:
  */
 
+import com.kaykay.dianping.common.AdminPermission;
 import com.kaykay.dianping.common.BusinessException;
+import com.kaykay.dianping.common.CommonRes;
 import com.kaykay.dianping.common.EmBussinessError;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -14,6 +16,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 import sun.misc.BASE64Encoder;
 
@@ -35,7 +38,7 @@ public class AdminController {
     @Value("${admin.email}")
     private String email;
     @Value("${admin.encryptPassword}")
-    private String password;
+    private String encryptPassword;
 
 
     @Autowired
@@ -45,10 +48,13 @@ public class AdminController {
     public static final String CURRENT_ADMIN_SESSION = "currentAdminSession";
 
     @RequestMapping("/index")
-    public ModelAndView index() {
+    @AdminPermission(produceType = "application/json")
+    @ResponseBody
+    public CommonRes index() {
 
-        ModelAndView modelAndView = new ModelAndView("/admin/admin/index");
-        return modelAndView;
+       // ModelAndView modelAndView = new ModelAndView("/admin/admin/index");
+        // return modelAndView;
+        return CommonRes.create(null);
     }
 
     @RequestMapping("/loginpage")
@@ -58,14 +64,16 @@ public class AdminController {
         return modelAndView;
     }
 
-    @RequestMapping(value="/login",method= RequestMethod.POST)
-    public String login(@RequestParam(name="emial")String email, @RequestParam(name="password")String password) throws BusinessException, UnsupportedEncodingException, NoSuchAlgorithmException {
+    @RequestMapping(value = "/login",method = RequestMethod.POST)
+    public String login(@RequestParam(name="email")String email,@RequestParam(name="password")String password) throws BusinessException,
+            UnsupportedEncodingException,
+                        NoSuchAlgorithmException {
 
         if(StringUtils.isEmpty(email) || StringUtils.isEmpty(password))
         {
             throw new BusinessException(EmBussinessError.PARAMETER_VALIDATION_ERROR,"用户名密码不能为空");
         }
-        if(email.equals(this.email) && encodByMd5(password).equals(this.password)){
+        if(email.equals(this.email) && encodByMd5(password).equals(this.encryptPassword)){
             //登录成功
             httpServletRequest.getSession().setAttribute(CURRENT_ADMIN_SESSION,email);
             return "redirect:/admin/admin/index";
