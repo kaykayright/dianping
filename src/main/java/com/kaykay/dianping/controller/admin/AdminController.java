@@ -8,6 +8,9 @@ package com.kaykay.dianping.controller.admin;/**
 import com.kaykay.dianping.common.AdminPermission;
 import com.kaykay.dianping.common.BusinessException;
 import com.kaykay.dianping.common.EmBussinessError;
+import com.kaykay.dianping.service.CategoryService;
+import com.kaykay.dianping.service.SellerService;
+import com.kaykay.dianping.service.ShopService;
 import com.kaykay.dianping.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -46,6 +49,15 @@ public class AdminController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private CategoryService categoryService;
+
+    @Autowired
+    private SellerService sellerService;
+
+    @Autowired
+    private ShopService shopService;
+
 
     public static final String CURRENT_ADMIN_SESSION = "currentAdminSession";
 
@@ -56,6 +68,10 @@ public class AdminController {
         ModelAndView modelAndView = new ModelAndView("/admin/admin/index");
         System.out.println(userService.countAllUser());
         modelAndView.addObject("userCount",userService.countAllUser());
+        modelAndView.addObject("shopCount",shopService.countAllShop());
+        modelAndView.addObject("categoryCount",categoryService.countAllCategory());
+        modelAndView.addObject("sellerCount",sellerService.countAllSeller());
+
         modelAndView.addObject("CONTROLLER_NAME","admin");
         modelAndView.addObject("ACTION_NAME","index");
         return modelAndView;

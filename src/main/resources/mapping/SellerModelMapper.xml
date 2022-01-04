@@ -149,4 +149,11 @@
       disabled_flag = #{disabledFlag,jdbcType=DECIMAL}
     where id = #{id,jdbcType=INTEGER}
   </update>
+
+  <select id="countAllSeller" resultType="java.lang.Integer">
+    select count(1) from seller
+  </select>
+
+
+
 </mapper>

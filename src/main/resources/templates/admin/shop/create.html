@@ -107,7 +107,8 @@ License: You must have a valid license purchased only from themeforest(the above
                         <div class="form-group">
                             <label class="col-md-3 control-label">经度<span class="required" aria-required="true"></span></label>
                             <div class="col-md-6">
-                                <input type="text" name="longitude" id="longitude" value="" readonly class="form-control" />
+                                <input type="text" name="longtitude" id="longtitude" value="" readonly
+                                       class="form-control" />
                             </div>
                         </div>
                         <div class="form-group">
@@ -212,7 +213,7 @@ License: You must have a valid license purchased only from themeforest(the above
                     if(data.status == 0){
                         alert("地址解析成功");
                         $("#latitude").val(getFloat(data.result.location.lat,6));
-                        $("#longitude").val(getFloat(data.result.location.lng,6));
+                        $("#longtitude").val(getFloat(data.result.location.lng,6));
                     }else{
                         alert("获取百度地图失败，原因为"+data);
                     }
