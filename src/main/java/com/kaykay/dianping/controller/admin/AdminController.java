@@ -7,8 +7,8 @@ package com.kaykay.dianping.controller.admin;/**
 
 import com.kaykay.dianping.common.AdminPermission;
 import com.kaykay.dianping.common.BusinessException;
-import com.kaykay.dianping.common.CommonRes;
 import com.kaykay.dianping.common.EmBussinessError;
+import com.kaykay.dianping.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -16,7 +16,6 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 import sun.misc.BASE64Encoder;
 
@@ -44,17 +43,23 @@ public class AdminController {
     @Autowired
     private HttpServletRequest httpServletRequest;
 
+    @Autowired
+    private UserService userService;
+
 
     public static final String CURRENT_ADMIN_SESSION = "currentAdminSession";
 
     @RequestMapping("/index")
     @AdminPermission(produceType = "application/json")
-    @ResponseBody
-    public CommonRes index() {
+    public ModelAndView index() {
 
-       // ModelAndView modelAndView = new ModelAndView("/admin/admin/index");
-        // return modelAndView;
-        return CommonRes.create(null);
+        ModelAndView modelAndView = new ModelAndView("/admin/admin/index");
+        System.out.println(userService.countAllUser());
+        modelAndView.addObject("userCount",userService.countAllUser());
+        modelAndView.addObject("CONTROLLER_NAME","admin");
+        modelAndView.addObject("ACTION_NAME","index");
+        return modelAndView;
+
     }
 
     @RequestMapping("/loginpage")
