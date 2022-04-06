@@ -85,6 +85,9 @@ public class ShopModel {
      */
     private Integer categoryId;
 
+    private Integer distance;
+
+
     private CategoryModel categoryModel;
 
     /**
@@ -517,5 +520,13 @@ public class ShopModel {
      */
     public void setIconUrl(String iconUrl) {
         this.iconUrl = iconUrl == null ? null : iconUrl.trim();
+    }
+
+    public Integer getDistance() {
+        return distance;
+    }
+
+    public void setDistance(Integer distance) {
+        this.distance = distance;
     }
 }

@@ -33,7 +33,12 @@ public class CategoryController {
     @RequestMapping("/list")
     public CommonRes list(){
         List<CategoryModel> categoryModelList = categoryService.selectAll();
+
+
         return CommonRes.create(categoryModelList);
     }
+
+
+
 
 }
