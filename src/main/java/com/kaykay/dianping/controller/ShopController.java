@@ -4,6 +4,7 @@ package com.kaykay.dianping.controller;
 import com.kaykay.dianping.common.BusinessException;
 import com.kaykay.dianping.common.CommonRes;
 import com.kaykay.dianping.common.EmBussinessError;
+import com.kaykay.dianping.model.CategoryModel;
 import com.kaykay.dianping.model.ShopModel;
 import com.kaykay.dianping.service.CategoryService;
 import com.kaykay.dianping.service.ShopService;
@@ -52,15 +53,22 @@ public class ShopController {
     @ResponseBody
     public CommonRes search(@RequestParam(name ="longtitude")BigDecimal longtitude,
                             @RequestParam(name ="latitude")BigDecimal latitude,
-                            @RequestParam(name = "keyword")String keyword) throws BusinessException{
+                            @RequestParam(name = "keyword")String keyword,
+                            @RequestParam(name="orderby",required = false)Integer orderby,
+                            @RequestParam(name="categoryId",required = false)Integer categoryId,
+                            @RequestParam(name="tags",required = false)String tags) throws BusinessException{
 
         if(StringUtils.isEmpty(keyword) || longtitude == null || latitude ==null){
             throw  new BusinessException(EmBussinessError.PARAMETER_VALIDATION_ERROR);
         }
 
-        List<ShopModel> shopModelList = shopService.search(longtitude,latitude,keyword);
+        List<ShopModel> shopModelList = shopService.search(longtitude,latitude,keyword,orderby,categoryId,tags);
+        List<CategoryModel> categoryModelList = categoryService.selectAll();
+        List<Map<String ,Object>> tagsAggregation = shopService.searchGroupByTags(keyword,categoryId,tags);
         Map<String,Object> resMap = new HashMap<>();
         resMap.put("shop",shopModelList);
+        resMap.put("category",categoryModelList);
+        resMap.put("tags",tagsAggregation);
         return CommonRes.create(resMap);
     }
 
