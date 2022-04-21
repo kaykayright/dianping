@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
@@ -56,13 +57,14 @@ public class ShopController {
                             @RequestParam(name = "keyword")String keyword,
                             @RequestParam(name="orderby",required = false)Integer orderby,
                             @RequestParam(name="categoryId",required = false)Integer categoryId,
-                            @RequestParam(name="tags",required = false)String tags) throws BusinessException{
+                            @RequestParam(name="tags",required = false)String tags) throws BusinessException, IOException {
 
         if(StringUtils.isEmpty(keyword) || longtitude == null || latitude ==null){
             throw  new BusinessException(EmBussinessError.PARAMETER_VALIDATION_ERROR);
         }
 
-        List<ShopModel> shopModelList = shopService.search(longtitude,latitude,keyword,orderby,categoryId,tags);
+        //List<ShopModel> shopModelList = shopService.search(longtitude,latitude,keyword,orderby,categoryId,tags);
+        List<ShopModel> shopModelList = (List<ShopModel>) shopService.searchES(longtitude,latitude,keyword,orderby,categoryId,tags);
         List<CategoryModel> categoryModelList = categoryService.selectAll();
         List<Map<String ,Object>> tagsAggregation = shopService.searchGroupByTags(keyword,categoryId,tags);
         Map<String,Object> resMap = new HashMap<>();

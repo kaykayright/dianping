@@ -14,14 +14,22 @@ import com.kaykay.dianping.model.ShopModel;
 import com.kaykay.dianping.service.CategoryService;
 import com.kaykay.dianping.service.SellerService;
 import com.kaykay.dianping.service.ShopService;
+import org.elasticsearch.action.search.SearchRequest;
+import org.elasticsearch.action.search.SearchResponse;
+import org.elasticsearch.client.RequestOptions;
+import org.elasticsearch.client.RestHighLevelClient;
+import org.elasticsearch.common.unit.TimeValue;
+import org.elasticsearch.search.SearchHit;
+import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
 import java.math.BigDecimal;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 /**
  * todo
@@ -40,6 +48,9 @@ public class ShopServiceImpl  implements ShopService {
 
     @Autowired
     private SellerService sellerService;
+
+    @Autowired
+    private RestHighLevelClient restHighLevelClient;
 
     @Override
     @Transactional
@@ -126,5 +137,30 @@ public class ShopServiceImpl  implements ShopService {
     @Override
     public List<Map<String, Object>> searchGroupByTags(String keyword, Integer categoryId, String tags) {
         return shopModelMapper.searchGroupByTags(keyword,categoryId,tags);
+    }
+
+    @Override
+    public Map<String, Object> searchES(BigDecimal longtitude, BigDecimal latitude, String keyword, Integer orderby, Integer categoryId, String tags) throws IOException {
+
+        Map<String,Object> result = new HashMap<>();
+
+        SearchRequest  searchRequest = new SearchRequest("shop");
+        SearchSourceBuilder sourceBuilder = new SearchSourceBuilder();
+        List<Integer> shopIdList = new ArrayList<>();
+        sourceBuilder.timeout(new TimeValue(60, TimeUnit.SECONDS));
+
+        SearchResponse searchResponse = restHighLevelClient.search(searchRequest, RequestOptions.DEFAULT);
+        SearchHit[] hits = searchResponse.getHits().getHits();
+        for(SearchHit hit : hits){
+
+            shopIdList.add(new Integer((hit.getSourceAsMap().get("id").toString())));
+
+        }
+
+        List<ShopModel> shopModelList = shopIdList.stream().map(id->{return get(id);}).collect(Collectors.toList());
+
+        result.put("shop",shopIdList);
+
+        return result;
     }
 }
