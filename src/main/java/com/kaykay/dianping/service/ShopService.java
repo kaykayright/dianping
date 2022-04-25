@@ -35,7 +35,7 @@ public interface ShopService {
     List<Map<String,Object>> searchGroupByTags(String keyword, Integer categoryId, String tags);
 
 
-    List<ShopModel>  searchES(BigDecimal longtitude,BigDecimal latitude ,String keyword,Integer orderby,
+    Map<String,Object> searchES(BigDecimal longtitude,BigDecimal latitude ,String keyword,Integer orderby,
                              Integer categoryId,String tags) throws IOException;
 
 }

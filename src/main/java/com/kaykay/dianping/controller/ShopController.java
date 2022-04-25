@@ -64,9 +64,13 @@ public class ShopController {
         }
 
         //List<ShopModel> shopModelList = shopService.search(longtitude,latitude,keyword,orderby,categoryId,tags);
-        List<ShopModel> shopModelList = (List<ShopModel>) shopService.searchES(longtitude,latitude,keyword,orderby,categoryId,tags);
+        //List<ShopModel> shopModelList = (List<ShopModel>) shopService.searchES(longtitude,latitude,keyword,orderby,categoryId,tags);
+
+        Map<String,Object> result =  shopService.searchES(longtitude,latitude,keyword,orderby, categoryId,tags);
+        List<ShopModel> shopModelList = (List<ShopModel>) result.get("shop");
         List<CategoryModel> categoryModelList = categoryService.selectAll();
-        List<Map<String ,Object>> tagsAggregation = shopService.searchGroupByTags(keyword,categoryId,tags);
+        //List<Map<String ,Object>> tagsAggregation = shopService.searchGroupByTags(keyword,categoryId,tags);
+        List<Map<String ,Object>> tagsAggregation = (List<Map<String, Object>>) result.get("tags");
         Map<String,Object> resMap = new HashMap<>();
         resMap.put("shop",shopModelList);
         resMap.put("category",categoryModelList);
