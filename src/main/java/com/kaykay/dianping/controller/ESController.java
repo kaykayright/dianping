@@ -3,19 +3,17 @@ package com.kaykay.dianping.controller;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.opencsv.CSVReader;
-import org.elasticsearch.action.ActionListener;
 import org.elasticsearch.action.bulk.BulkRequest;
 import org.elasticsearch.action.bulk.BulkResponse;
-import org.elasticsearch.action.get.GetResponse;
 import org.elasticsearch.action.index.IndexRequest;
-import org.elasticsearch.client.transport.TransportClient;
+import org.elasticsearch.client.RequestOptions;
+import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.common.xcontent.XContentType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.io.FileInputStream;
@@ -32,14 +30,15 @@ import java.util.List;
 public class ESController {
 
     @Autowired
-    private TransportClient transportClient;
+    private RestHighLevelClient restHighLevelClient;
 
+    /**
     @RequestMapping("/get")
     @ResponseBody
     public ResponseEntity get(@RequestParam(name="id")Integer id){
         GetResponse getResponse = transportClient.prepareGet("movie",null,id.toString()).get();
         return new ResponseEntity(getResponse.getSource(), HttpStatus.OK);
-    }
+    }**/
 
 
     @RequestMapping("/importdata")
@@ -47,7 +46,9 @@ public class ESController {
     public ResponseEntity importdata() throws IOException {
         BulkRequest bulkRequest = new BulkRequest();
         int lineId = 0;
-        InputStreamReader in = new InputStreamReader(new FileInputStream("./tmdb_5000_movies.csv"), Charset.forName("UTF-8"));
+        InputStreamReader in = new InputStreamReader(new FileInputStream("./tmdb_5000_movies.csv"),
+                Charset.forName(
+                "UTF-8"));
         CSVReader reader = new CSVReader(in, ',');
         List<String[]> allRecords = reader.readAll();
         for (String[] records : allRecords) {
@@ -82,6 +83,11 @@ public class ESController {
         }
         reader.close();
 
+        BulkResponse bulkResponse = restHighLevelClient.bulk(bulkRequest, RequestOptions.DEFAULT);
+
+        System.out.println(bulkResponse.hasFailures());//是否执行失败
+
+        /**
         transportClient.bulk(bulkRequest, new ActionListener<BulkResponse>() {
             @Override
             public void onResponse(BulkResponse bulkItemResponses) {
@@ -103,6 +109,7 @@ public class ESController {
                 System.out.println(e);
             }
         });
+         **/
 
 //        File csv = new File("./tmdb_5000_movies.csv");  // CSV文件路径
 //        BufferedReader br = null;

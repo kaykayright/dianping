@@ -19,6 +19,7 @@ import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.common.unit.TimeValue;
+import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,7 +51,7 @@ public class ShopServiceImpl  implements ShopService {
     private SellerService sellerService;
 
     @Autowired
-    private RestHighLevelClient restHighLevelClient;
+    private RestHighLevelClient highLevelClient;
 
     @Override
     @Transactional
@@ -140,16 +141,15 @@ public class ShopServiceImpl  implements ShopService {
     }
 
     @Override
-    public Map<String, Object> searchES(BigDecimal longtitude, BigDecimal latitude, String keyword, Integer orderby, Integer categoryId, String tags) throws IOException {
-
-        Map<String,Object> result = new HashMap<>();
-
+    public List<ShopModel>  searchES(BigDecimal longtitude, BigDecimal latitude, String keyword, Integer orderby,
+                                     Integer categoryId, String tags) throws IOException {
         SearchRequest  searchRequest = new SearchRequest("shop");
         SearchSourceBuilder sourceBuilder = new SearchSourceBuilder();
-        List<Integer> shopIdList = new ArrayList<>();
+        sourceBuilder.query(QueryBuilders.matchQuery("name",keyword));
         sourceBuilder.timeout(new TimeValue(60, TimeUnit.SECONDS));
-
-        SearchResponse searchResponse = restHighLevelClient.search(searchRequest, RequestOptions.DEFAULT);
+        searchRequest.source(sourceBuilder);
+        List<Integer> shopIdList = new ArrayList<>();
+        SearchResponse searchResponse = highLevelClient.search(searchRequest, RequestOptions.DEFAULT);
         SearchHit[] hits = searchResponse.getHits().getHits();
         for(SearchHit hit : hits){
 
@@ -159,8 +159,6 @@ public class ShopServiceImpl  implements ShopService {
 
         List<ShopModel> shopModelList = shopIdList.stream().map(id->{return get(id);}).collect(Collectors.toList());
 
-        result.put("shop",shopIdList);
-
-        return result;
+        return shopModelList;
     }
 }
